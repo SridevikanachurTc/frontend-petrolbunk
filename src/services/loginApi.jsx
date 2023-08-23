@@ -1,22 +1,47 @@
-// // api.js
+import instance from '../configurations/apiConfig';
 
-// import apiConfig from './src/configurations/apiConfig.jsx';
+const login = async (username, password) => {
+  try {
+    const response = await instance.post('/users/login', {
+      username,
+      password,
+    });
+    console.log('testiiioo', response.data);
 
-// const login = async (username, password) => {
-//   try {
-//     const response = await apiConfig.post('login', {
-//       username,
-//       password,
-//     });
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
+    if (response.data && response.data.accessToken) {
+      instance.defaults.headers[
+        'Authorization'
+      ] = `Bearer ${response.data.accessToken}`;
+
+      const userDetails = await fetchUserDetails();
+      return {token: response.data.accessToken, user: userDetails};
+    } else {
+      console.log('test', response.data);
+      throw new Error(response.data.message || 'Invalid credentials');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const fetchUserDetails = async () => {
+  try {
+    const response = await instance.get('/users/me');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// export const logout = async () => {
+//   // TODO: Add logout logic here
+//   // You may want to remove the token from the apiConfig defaults,
+//   // clear local storage, and perform any other necessary cleanup.
 // };
 
-// // Add other API functions as needed, like:
-// // const getUserProfile = async (userId) => {...}
-// // const logout = async () => {...}
-// // ... etc.
+export const loginApi = {
+  login,
+  //   logout
+};
 
-// export { login };
+export default loginApi;

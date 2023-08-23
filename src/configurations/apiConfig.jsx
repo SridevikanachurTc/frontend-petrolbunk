@@ -1,13 +1,11 @@
-// // apiConfig.js
+import axios from 'axios';
 
-// import axios from 'axios';
+const instance = axios.create({
+  baseURL: 'https://thin-hands-fry.loca.lt',
+  // Add any default headers if needed
+  // headers: {
+  //   'Authorization': 'Bearer YOUR_TOKEN'
+  // }
+});
 
-// const instance = axios.create({
-//   baseURL: 'https://your-api-endpoint.com/',
-//   // Add any default headers if needed
-//   // headers: {
-//   //   'Authorization': 'Bearer YOUR_TOKEN'
-//   // }
-// });
-
-// export default instance;
+export default instance;
