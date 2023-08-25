@@ -15,7 +15,7 @@ const NavbarFooter = ({ navigation }) => {
         <Icon name="add-circle" size={30} color="#FFF" /> 
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('EmployeeList')}>
-        <Icon name="list" size={30} color="#FFF" />
+        <Icon name="list" size={37} color="#FFF" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileAdmin')}>
         <Icon name="account-circle" size={30} color="#FFF" />
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 15,
     backgroundColor: '#001F3F',
-    borderTopLeftRadius: 20,    // Add this line
+    borderTopLeftRadius: 20,
     borderTopRightRadius: 20, 
   },
 });

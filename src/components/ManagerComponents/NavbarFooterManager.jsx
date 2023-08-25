@@ -15,7 +15,7 @@ const NavbarFooterManager = ({navigation}) => {
         <Icon name="add-circle" size={30} color="#FFF" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('StaffEmployeeList')}>
-        <Icon name="list" size={30} color="#FFF" />
+        <Icon name="list" size={37} color="#FFF" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('ManagerProfile')}>
         <Icon name="account-circle" size={30} color="#FFF" />
@@ -28,8 +28,10 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: '#000',
+    padding: 15,
+    backgroundColor: '#001F3F',
+    borderTopLeftRadius: 20,    // Add this line
+    borderTopRightRadius: 20, 
   },
 });
 

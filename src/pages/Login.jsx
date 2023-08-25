@@ -122,37 +122,37 @@ import {
   Text,
   ImageBackground,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import loginApi from '../services/loginApi';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import loginApi from '../services/loginApi';
 import {useNavigation} from '@react-navigation/native';
 
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
-      const {token, user} = await loginApi.login(username, password);
+      // const {token, user} = await loginApi.login(username, password);
 
-      // Storing the user data and token in AsyncStorage
-      await AsyncStorage.setItem('userData', JSON.stringify(user));
-      await AsyncStorage.setItem('token', token);
-      await AsyncStorage.setItem('userRole', user.role);
+      // // Storing the user data and token in AsyncStorage
+      // await AsyncStorage.setItem('userData', JSON.stringify(user));
+      // await AsyncStorage.setItem('token', token);
+      // await AsyncStorage.setItem('userRole', user.role);
 
-      // navigation.navigate('LoginRoutes');
+     // // navigation.navigate('LoginRoutes');
      
-      if (user.role === 'ADMIN') {
+      // if (user.role === 'ADMIN') {
         navigation.navigate('AdminRoutes', { screen: 'AdminHome' });
-    } else if (user.role === 'BRANCH_MANAGER') {
-      navigation.navigate('ManagerRoutes', { screen: 'ManagerHome' });
-    } else if (user.role === 'STAFF') {
-        navigation.navigate('StaffRoutes', { screen: 'StaffHome' });
-    } else {
-        // Handle other cases or default case
-        Alert.alert('Error', 'User role not recognized');
-    }
+    // } else if (user.role === 'BRANCH_MANAGER') {
+      // navigation.navigate('ManagerRoutes', { screen: 'ManagerHome' });
+    // } else if (user.role === 'STAFF') {
+        // navigation.navigate('StaffRoutes', { screen: 'StaffHome' });
+    // } else {
+    //     // Handle other cases or default case
+    //     Alert.alert('Error', 'User role not recognized');
+    // }
     
     } catch (error) {
       console.log(error);
@@ -171,16 +171,16 @@ const Login = () => {
           <TextInput
             style={styles.input}
             placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
+            // value={username}
+            // onChangeText={setUsername}
             placeholderTextColor={'#fff'}
           />
           <TextInput
             style={styles.input}
             placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={true}
+            // value={password}
+            // onChangeText={setPassword}
+            // secureTextEntry={true}
             placeholderTextColor={'#fff'}
           />
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
+    color: '#fff',
     height: 40,
     width: 250,
     borderColor: 'gray',

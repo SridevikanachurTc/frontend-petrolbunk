@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import ManagerScreenLayout from '../../layouts/ManagerScreenLayout';
+import { View, Modal, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const AddStaff = ({ navigation }) => {
+const AddEmployeeModal = ({ isVisible, closeModal, onSubmit }) => {
 
     const [employeeDetails, setEmployeeDetails] = useState({
         name: '',
@@ -22,7 +21,7 @@ const AddStaff = ({ navigation }) => {
     };
 
     const handleSubmit = () => {
-        console.log('Employee Details:', employeeDetails); 
+        onSubmit(employeeDetails);
         setEmployeeDetails({
             name: '',
             phoneNumber: '',
@@ -32,6 +31,7 @@ const AddStaff = ({ navigation }) => {
             address: '',
             position: ''
         });
+        closeModal();
     };
 
     const handleCancel = () => {
@@ -44,12 +44,17 @@ const AddStaff = ({ navigation }) => {
             address: '',
             position: ''
         });
+        closeModal();
     };
 
     return (
-        <ManagerScreenLayout navigation={navigation}>
-            <View style={styles.container}>
-            <TextInput
+        <Modal 
+            animationType="slide"
+            visible={isVisible}
+            presentationStyle="pageSheet"
+        >
+            <View style={styles.modalContainer}>
+                <TextInput
                     placeholder="Name"
                     value={employeeDetails.name}
                     onChangeText={(text) => handleInputChange('name', text)}
@@ -88,36 +93,23 @@ const AddStaff = ({ navigation }) => {
                     value={employeeDetails.position}
                     onChangeText={(text) => handleInputChange('position', text)}
                 />
-                <View style={styles.row}>
+                
                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Submit</Text>
+                    <Text style={styles.submitButtonText}>Submit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                    <Text style={styles.buttonText}>Cancel</Text>
+                    <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
-                </View>
             </View>
-        </ManagerScreenLayout>
+        </Modal>
     );
 }
 
 const styles = StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-      justifyContent: 'space-between'
-    },
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-        padding: 20
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 20
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     submitButton: {
         backgroundColor: "#4CAF50",
@@ -125,17 +117,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginTop: 10
     },
+    submitButtonText: {
+        color: 'white',
+        fontSize: 16
+    },
     cancelButton: {
         backgroundColor: "#f44336",
         padding: 10,
         borderRadius: 5,
-        marginTop: 10
+        marginTop: 10,
+        width: 300
     },
-    buttonText: {
+    cancelButtonText: {
         color: 'white',
-        fontSize: 16,
-        textAlign: 'center'
+        fontSize: 16
     }
 });
 
-export default AddStaff;
+export default AddEmployeeModal;
