@@ -1,50 +1,76 @@
+// AddBranchModal.js
+
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
 
-const AddBranchForm = ({ onSubmit }) => {
-
-    const [address, setAddress] = useState('');
+const AddBranchForm = ({ isVisible, onDismiss, onSubmit }) => {
+    const [branchName, setBranchName] = useState('');
+    const [location, setLocation] = useState('');
 
     const handleCancel = () => {
-        setAddress('');
+        setBranchName('');
+        setLocation('');
+        onDismiss();
     };
 
     const handleSubmit = () => {
-        onSubmit(address);
-        setAddress('');
+        onSubmit({ branchName, location });
+        handleCancel();
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                placeholder="Address"
-                value={address}
-                onChangeText={setAddress}
-                style={styles.input}
-            />
-
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                    <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
+        <Modal 
+            isVisible={isVisible}
+            onBackdropPress={handleCancel}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            backdropTransitionInTiming={1000}
+            backdropTransitionOutTiming={500}
+            style={styles.modal}
+        >
+            <View style={styles.container}>
+                <TextInput
+                    placeholder="Branch Name"
+                    value={branchName}
+                    onChangeText={setBranchName}
+                    style={styles.input}
+                />
+                <TextInput
+                    placeholder="Branch Location"
+                    value={location}
+                    onChangeText={setLocation}
+                    style={styles.input}
+                />
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>Submit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+                        <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </Modal>
     );
 }
 
 const styles = StyleSheet.create({
+    modal: {
+        justifyContent: 'flex-end',
+        margin: 0,
+    },
     container: {
-        padding: 20
+        backgroundColor: 'white',
+        height: '50%',
+        padding: 20,
     },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 10,
-        marginBottom: 20
+        marginBottom: 20,
     },
     buttonContainer: {
         flexDirection: 'row',

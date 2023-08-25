@@ -31,12 +31,14 @@ const FuelOrderFormModal = ({ isVisible, toggleModal }) => {
                     keyboardType="numeric"
                     style={styles.input}
                 />
+                <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-                    <Text>Submit</Text>
+                    <Text  style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={toggleModal} style={styles.cancelButton}>
-                    <Text>Cancel</Text>
+                    <Text  style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
+                </View>
             </View>
         </Modal>
     );
@@ -61,17 +63,27 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 20,
     },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     submitButton: {
         backgroundColor: "#4CAF50",
         padding: 10,
         borderRadius: 5,
-        marginVertical: 5
+        flex: 0.45,
+        alignItems: 'center'
     },
     cancelButton: {
         backgroundColor: "#f44336",
         padding: 10,
         borderRadius: 5,
-        marginVertical: 5,
+        flex: 0.45,
+        alignItems: 'center'
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16
     }
 });
 
