@@ -1,18 +1,20 @@
 // AddBranchCard.js
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const AddBranchCard = ({ branchName, locationName }) => {
+const AddBranchCard = ({ branchName, locationName, onPress }) => {
     return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={onPress}>
+        <View>
             <Text style={styles.branchName}>{branchName}</Text>
             <View style={styles.locationContainer}>
                 <Icon style={styles.icon} name="map-marker" size={23} />
                 <Text style={styles.locationName}>{locationName}</Text>
             </View>
         </View>
+        </TouchableOpacity>
     );
 };
 

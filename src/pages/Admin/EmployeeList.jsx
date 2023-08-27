@@ -1,24 +1,8 @@
-// import React from 'react';
-// import {Text} from 'react-native';
-// import AdminScreenLayout from '../../layouts/AdminScreenLayout';
-
-// const EmployeeList = ({navigation}) => {
-//   return (
-//     <AdminScreenLayout navigation={navigation}>
-//         <Text style={{color: '#000'}}>Employee List</Text>
-//       </AdminScreenLayout>
-//   );
-// };
-
-// export default EmployeeList;
-// EmployeeList.js
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import AdminScreenLayout from '../../layouts/AdminScreenLayout';
 import EmployeeCardsAdmin from '../../components/EmployeeCards';
 import EmployeeDetailsModal from '../../components/EmployeeDetailsModal';
-import AddEmployeeHeader from '../../components/AddEmployeeHeader';
-// import { BlurView } from '@react-native-community/blur';
 
 const employees = [
   {
@@ -229,79 +213,50 @@ const employees = [
     email: 'john@example.com',
     phone: '123-456-7890',
   },
- 
+
   // ... Add more employees as needed
 ];
 
+
 const EmployeeList = ({ navigation }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleEmployeePress = (employee) => {
     setSelectedEmployee(employee);
+    setModalVisible(true);
   };
 
-  const handleCloseModal = () => {
+  const toggleModal = () => {
     setSelectedEmployee(null);
-  };
-
-  const renderContentModelVisible = () => (
-    <View style={styles.containerVisible}>
-      <AddEmployeeHeader />
-      <FlatList
-        data={employees}
-        renderItem={({ item }) => (
-          <EmployeeCardsAdmin employee={item} onPress={handleEmployeePress} />
-        )}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-      />
-      <EmployeeDetailsModal
-        isVisible={!!selectedEmployee}
-        employee={selectedEmployee}
-        onClose={handleCloseModal}
-      />
-    </View>
-  );
-
-
-  const renderContent = () => (
-    <View style={styles.container}>
-      <AddEmployeeHeader />
-      <FlatList
-        data={employees}
-        renderItem={({ item }) => (
-          <EmployeeCardsAdmin employee={item} onPress={handleEmployeePress} />
-        )}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-      />
-      <EmployeeDetailsModal
-        isVisible={!!selectedEmployee}
-        employee={selectedEmployee}
-        onClose={handleCloseModal}
-      />
-    </View>
-  );
+    setModalVisible(!isModalVisible);
+  }; 
 
   return (
     <AdminScreenLayout navigation={navigation}>
-      {selectedEmployee ? (
-          renderContentModelVisible()
-      ) : (
-        renderContent()
-      )}
+      <View style={styles.container}>
+        <FlatList
+          data={employees}
+          renderItem={({ item }) => (
+            <EmployeeCardsAdmin
+              employee={item}
+              onPress={() => handleEmployeePress(item)}
+            />
+          )}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+      <EmployeeDetailsModal
+        isVisible={isModalVisible}
+        employee={selectedEmployee}
+        onClose={toggleModal}
+      />
     </AdminScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  containerVisible:{
-    flex: 1,
-    padding: 16,
-    // background: '',
-    opacity:0.2,
-    
-  },
   container: {
     flex: 1,
     padding: 16,

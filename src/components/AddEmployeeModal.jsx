@@ -1,9 +1,28 @@
 import React, { useState } from 'react';
-import { View, Modal, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
 
-const AddEmployeeModal = ({ isVisible, closeModal, onSubmit }) => {
-
+const AddEmployeeModal = ({ isVisible, closeModal, onSubmit, selectedBranch }) => {
     const [employeeDetails, setEmployeeDetails] = useState({
+      name: '',
+      phoneNumber: '',
+      salary: '',
+      email: '',
+      age: '',
+      address: '',
+      position: ''
+    });
+  
+    const handleInputChange = (name, value) => {
+      setEmployeeDetails(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+  
+    const handleSubmit = () => {
+      onSubmit(employeeDetails, selectedBranch.id);
+      setEmployeeDetails({
         name: '',
         phoneNumber: '',
         salary: '',
@@ -11,47 +30,32 @@ const AddEmployeeModal = ({ isVisible, closeModal, onSubmit }) => {
         age: '',
         address: '',
         position: ''
-    });
-
-    const handleInputChange = (name, value) => {
-        setEmployeeDetails(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+      });
+      closeModal();
     };
-
-    const handleSubmit = () => {
-        onSubmit(employeeDetails);
-        setEmployeeDetails({
-            name: '',
-            phoneNumber: '',
-            salary: '',
-            email: '',
-            age: '',
-            address: '',
-            position: ''
-        });
-        closeModal();
-    };
-
+  
     const handleCancel = () => {
-        setEmployeeDetails({
-            name: '',
-            phoneNumber: '',
-            salary: '',
-            email: '',
-            age: '',
-            address: '',
-            position: ''
-        });
-        closeModal();
+      setEmployeeDetails({
+        name: '',
+        phoneNumber: '',
+        salary: '',
+        email: '',
+        age: '',
+        address: '',
+        position: ''
+      });
+      closeModal();
     };
 
     return (
         <Modal 
-            animationType="slide"
-            visible={isVisible}
-            presentationStyle="pageSheet"
+            isVisible={isVisible}
+            onBackdropPress={handleCancel}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            backdropTransitionInTiming={1000}
+            backdropTransitionOutTiming={500}
+            style={styles.modal}
         >
             <View style={styles.modalContainer}>
                 <TextInput
@@ -94,41 +98,50 @@ const AddEmployeeModal = ({ isVisible, closeModal, onSubmit }) => {
                     onChangeText={(text) => handleInputChange('position', text)}
                 />
                 
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                    <Text style={styles.cancelButtonText}>Cancel</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>Submit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+                        <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
+    modal: {
+        justifyContent: 'flex-end',
+        margin: 0,
+    },
     modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: 'white',
+        height: '80%',
+        padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30, 
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     submitButton: {
         backgroundColor: "#4CAF50",
         padding: 10,
         borderRadius: 5,
-        marginTop: 10
-    },
-    submitButtonText: {
-        color: 'white',
-        fontSize: 16
+        flex: 0.45,
+        alignItems: 'center'
     },
     cancelButton: {
         backgroundColor: "#f44336",
         padding: 10,
         borderRadius: 5,
-        marginTop: 10,
-        width: 300
+        flex: 0.45,
+        alignItems: 'center'
     },
-    cancelButtonText: {
+    buttonText: {
         color: 'white',
         fontSize: 16
     }

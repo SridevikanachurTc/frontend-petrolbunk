@@ -1,38 +1,31 @@
 import React from 'react';
-import { View, Text, Modal, FlatList, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
 
 const EmployeeDetailsModal = ({ isVisible, employee, onClose }) => {
   if (!employee) return null;
 
-  const renderEmployeeDetail = ({ item }) => (
-    <View>
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                <Icon name="close" size={30} color="#fff" />
-            </TouchableOpacity>
-    <View>
-      <Text style={styles.modalTitle}>Employee Details</Text>
-      <Text style={styles.text}>Name: {item.name}</Text>
-      <Text style={styles.text}>Position: {item.position}</Text>
-      <Text style={styles.text}>Department: {item.department}</Text>
-      <Text style={styles.text}>Email: {item.email}</Text>
-      <Text style={styles.text}>Phone: {item.phone}</Text>
-    </View>
-    </View>
-  );
-
-  const employeeDetailsArray = new Array(10).fill(employee);
-
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible} >
+    <Modal 
+      isVisible={isVisible}
+      onBackdropPress={onClose}
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      backdropTransitionInTiming={1000}
+      backdropTransitionOutTiming={500}
+      style={styles.modal}
+    >
       <View style={styles.modalContainer}>
-        <FlatList
-          data={employeeDetailsArray}
-          renderItem={renderEmployeeDetail}
-          keyExtractor={(item, index) => index.toString()}
-          style={styles.modalContent}
-          showsVerticalScrollIndicator={false}
-        />
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Icon name="close" size={30} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.modalTitle}>Employee Details</Text>
+        <Text style={styles.text}>Name: {employee.name}</Text>
+        <Text style={styles.text}>Position: {employee.position}</Text>
+        <Text style={styles.text}>Department: {employee.department}</Text>
+        <Text style={styles.text}>Email: {employee.email}</Text>
+        <Text style={styles.text}>Phone: {employee.phone}</Text>
       </View>
     </Modal>
   );
@@ -40,36 +33,30 @@ const EmployeeDetailsModal = ({ isVisible, employee, onClose }) => {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    // flex: 1,
-    width: '80%',
-    height: '75%',
-    position: 'absolute',
-    top: '10%',
-    left: '10%',
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-  },
-  modalContent: {
-    borderRadius: 8,
-    width: '100%',
-    padding: 16,
+    backgroundColor: 'white',
+    height: '50%',
+    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30, 
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#000',
   },
   text: {
-    color:'#fff'
+    color:'#000',
   },
   closeButton: {
-    position: 'relative',
-    left: '90%',
-  }
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+},
 });
 
 export default EmployeeDetailsModal;
-
-{/* <Button title="Close" onPress={onClose} /> */}

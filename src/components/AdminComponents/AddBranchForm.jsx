@@ -7,7 +7,7 @@ import Modal from 'react-native-modal';
 const AddBranchForm = ({ isVisible, onDismiss, onSubmit }) => {
     const [branchName, setBranchName] = useState('');
     const [location, setLocation] = useState('');
-
+    
     const handleCancel = () => {
         setBranchName('');
         setLocation('');
@@ -76,21 +76,25 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
     },
     submitButton: {
         backgroundColor: "#4CAF50",
         padding: 10,
-        borderRadius: 5,
         flex: 0.45,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: 1,
+        borderTopLeftRadius: 15,
+        borderBottomLeftRadius: 15
     },
     cancelButton: {
-        backgroundColor: "#f44336",
+        backgroundColor: "#f44336", 
         padding: 10,
-        borderRadius: 5,
         flex: 0.45,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginLeft: 1, 
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15       
     },
     buttonText: {
         color: 'white',

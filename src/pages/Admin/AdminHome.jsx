@@ -15,8 +15,8 @@ const AdminHome = ({ navigation }) => {
   const data = [
     { id: '1', component: HomeCardsCalled },
     { id: '2', component: LineGraph },
-    { id: '3', component: RingGraph },
-    { id: '4', component: StackGraph },
+    { id: '3', component: StackGraph },
+    { id: '4', component: RingGraph },
   ];
 
   return (

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
+import PetrolLevelIndicator from '../PetrolLevelIndicator';
 
 const FuelOrderFormModal = ({ isVisible, toggleModal }) => {
     const [quantity, setQuantity] = useState('');
@@ -24,6 +25,8 @@ const FuelOrderFormModal = ({ isVisible, toggleModal }) => {
             style={styles.modal}
         >
             <View style={styles.container}>
+                <Text style={{textAlign: 'center'}}> Present Fuel Level </Text>
+            <PetrolLevelIndicator level={50} />
                 <TextInput
                     placeholder="Order Quantity"
                     value={quantity}

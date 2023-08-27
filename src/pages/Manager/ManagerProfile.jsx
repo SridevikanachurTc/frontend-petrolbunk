@@ -1,18 +1,6 @@
-// import React from 'react';
-// import {Text} from 'react-native';
-// import ManagerScreenLayout from '../../layouts/ManagerScreenLayout';
-
-// const ManagerProfile = ({navigation}) => {
-//   return (
-//     <ManagerScreenLayout navigation={navigation}>
-//         <Text style={{color: '#000'}}>Manager Profile </Text>
-//       </ManagerScreenLayout>
-//   );
-// };
-
-// export default ManagerProfile;
 import React, { useState, useEffect } from 'react';
 import Profile from '../../components/Profile';
+import AdminScreenLayout from '../../layouts/AdminScreenLayout';
 import ManagerScreenLayout from '../../layouts/ManagerScreenLayout';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -63,6 +51,5 @@ const ManagerProfile = ({ navigation }) => {
       </ManagerScreenLayout>
   );
 };
-
 
 export default ManagerProfile;
