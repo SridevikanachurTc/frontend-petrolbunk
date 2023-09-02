@@ -95,10 +95,11 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
 
-const PetrolLevelIndicator = ({ level }) => {
+const PetrolLevelIndicator = ({ level, fuelLevel, maxCapacity }) => {
   const MAX_LEVEL = 100;
   const anim = useRef(new Animated.Value(0)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
+  const formattedLevel = parseFloat(fuelLevel).toFixed(2); 
 
   useEffect(() => {
     // Simultaneously run fill animation and wave animation
@@ -141,6 +142,7 @@ const PetrolLevelIndicator = ({ level }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={{marginTop: 6, fontSize: 18, fontWeight: 'bold', color: '#001F3F'}}>Max Capacity: {maxCapacity}L</Text>
     <View style={styles.outCircle}>
         <View style={styles.circle}>
             <Animated.View style={[styles.water, { height: waterHeight }]}>
@@ -148,7 +150,7 @@ const PetrolLevelIndicator = ({ level }) => {
             </Animated.View>
         </View>
     </View>
-    <Text style={{marginBottom: 5}}>{level} Liters</Text>
+    <Text style={{marginBottom: 5, fontSize: 18, fontWeight: 'bold', color: '#001F3F'}}>{formattedLevel}L</Text>
 </View>
   );
 };
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         borderWidth: 3,
         borderColor: '#001F3F',
-        margin: 20,
+        margin: 15,
     },
     circle: {
         width: 100,

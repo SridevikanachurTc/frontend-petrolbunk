@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#001F3F',
     borderTopLeftRadius: 20,    // Add this line
     borderTopRightRadius: 20, 
+    // position: 'absolute',
+    // bottom: 0,
+    // width: '100%'
   },
 });
 

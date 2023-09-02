@@ -1,12 +1,38 @@
 // manager staff customer
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {ProgressChart} from 'react-native-chart-kit';
 import {View, Text, Dimensions, StyleSheet} from 'react-native';
+import AdminGraphApi from '../services/AdminGraphApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 function RingGraph() {
+  const [managerCount, setManagerCount] = useState(0);
+  const [staffCount, setStaffCount] = useState(0);
+
+      const fetchData = useCallback(async () => {
+          try {
+              const mCount = await AdminGraphApi.getManagerCount();
+              const sCount = await AdminGraphApi.getStaffCount();
+              console.log(mCount);
+              console.log(sCount);
+              setManagerCount((mCount/100));
+              setStaffCount((sCount/100));
+          } catch (error) {
+              console.error('Error fetching user counts:', error);
+          }
+        }, []); 
+   
+
+      useFocusEffect(
+        useCallback(() => {
+          fetchData();
+          return () => {};  
+        }, [fetchData])
+      );
+
   const data = {
-    labels: ['Swim', 'Bike', 'Run'],
-    data: [0.4, 0.6, 0.8],
+      labels: ['Manager', 'Staff'],
+      data: [managerCount, staffCount],
   };
 
   const chartWidth = Dimensions.get('window').width * 0.9;
@@ -25,7 +51,7 @@ function RingGraph() {
 
   return (
     <View style={styles.container}>
-      <Text>Bezier Ring Chart</Text>
+      <Text style={styles.heading}>Employee Count</Text>
       <ProgressChart
         data={data}
         width={chartWidth}
@@ -48,6 +74,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // flex: 1,
+  },
+  heading: {
+    color: '#001F3F',
+    padding: 5,
+    margin: 10,
+    marginTop: 15,
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+    width: '90%',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

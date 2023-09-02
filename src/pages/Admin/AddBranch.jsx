@@ -1,141 +1,202 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import AdminScreenLayout from '../../layouts/AdminScreenLayout';
 import AddBranchCard from '../../components/AdminComponents/AddBranchCard';
 import AddEmployeeModal from '../../components/AddEmployeeModal';
 import AddBranchForm from '../../components/AdminComponents/AddBranchForm';
+import BranchApi from '../../services/BranchApi';
 
-const AddBranch = ({ navigation }) => {
+const AddBranch = ({navigation}) => {
+  // const dummyBranchData = [
+  //   {
+  //     id: '1',
+  //     branchName: 'Central HQ',
+  //     location: 'Downtown',
+  //     level: '40',
+  //   },
+  //   {
+  //     id: '2',
+  //     branchName: 'North Outlet',
+  //     location: 'Uptown',
+  //     level: '40',
+  //   },
+  //   {
+  //     id: '3',
+  //     branchName: 'South Outlet',
+  //     location: 'Suburbia',
+  //     level: '40',
+  //   },
+  //   {
+  //     id: '4',
+  //     branchName: 'East Corner',
+  //     location: 'Eastville',
+  //     level: '40',
+  //   },
+  //   {
+  //     id: '5',
+  //     branchName: 'West Station',
+  //     location: 'Westtown',
+  //     level: '40',
+  //   },
+  //   {
+  //     id: '6',
+  //     branchName: 'Midtown Spot',
+  //     location: 'Centreville',
+  //     level: '40',
+  //   },
+  // ];
 
-  const dummyBranchData = [
-    {
-        id: '1',
-        branchName: 'Central HQ',
-        location: 'Downtown',
-        level: '40'
-    },
-    {
-        id: '2',
-        branchName: 'North Outlet',
-        location: 'Uptown',
-        level: '40'
-    },
-    {
-        id: '3',
-        branchName: 'South Outlet',
-        location: 'Suburbia',
-        level: '40'
-    },
-    {
-        id: '4',
-        branchName: 'East Corner',
-        location: 'Eastville',
-        level: '40'
-    },
-    {
-        id: '5',
-        branchName: 'West Station',
-        location: 'Westtown',
-        level: '40'
-    },
-    {
-        id: '6',
-        branchName: 'Midtown Spot',
-        location: 'Centreville',
-        level: '40'
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isBranchVisible, setBranchVisible] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [managerExists, setManagerExists] = useState(false);
+
+
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        const fetchedBranches = await BranchApi.getBranches();
+        setBranches(fetchedBranches);
+      } catch (error) {
+        console.error("Failed to fetch branch details", error);
+      }
     }
-];
 
+    fetchBranches();
+  }, []);
 
-const [isModalVisible, setModalVisible] = useState(false);
-const [isBranchVisible, setBranchVisible] = useState(false);
-const [branches, setBranches] = useState(dummyBranchData);
-const [selectedBranch, setSelectedBranch] = useState(null);
-
-const handleFormSubmit = (data) => {
-    if (selectedBranch) {
-      // Update selected branch with employee data
-      const updatedBranches = branches.map(branch =>
-        branch.id === selectedBranch.id
-          ? { 
-              ...branch, 
-              employees: branch.employees 
-                            ? [...branch.employees, data] 
-                            : [data] 
-            }
-          : branch
-      );
-      setBranches(updatedBranches);
-      setSelectedBranch(null);
+  const handleFormSubmit = async (managerDetails, branchId) => {
+    try {
+      console.log(managerDetails);
+      console.log(branchId);
+      await BranchApi.createManager(branchId, managerDetails);
+      console.log('createdddd manager')
+      setModalVisible(false); 
+    } catch (error) {
+      // if (error.response && error.response.status === 500) { 
+      //   setManagerExists(true);
+      //   alert('Manager exists');
+      // } else {
+        console.error('Failed to add manager', error);
+      // }
     }
-    toggleModal();
   };
 
-  const handleBranchFormSubmit = (data) => {
-    setBranches(prevBranches => [...prevBranches, data]);
-};
+  const toggleModal = async branchId => {
+    setManagerExists(false); 
+  
+    // When the modal is closing, fetch latest branches
+    if (isModalVisible) {
+      try {
+        const fetchedBranches = await BranchApi.getBranches();
+        setBranches(fetchedBranches);
+      } catch (error) {
+        console.error("Failed to fetch branch details", error);
+      }
+    }
+
+    // Check if a manager exists for the branch
+    // try {
+      const existingManager = await BranchApi.checkManagerExistsForBranch(branchId);
+      console.log(existingManager);
+      if (existingManager) {
+        setManagerExists(true);
+        Alert.alert('Manager Exists', 'A manager already exists for this branch.');
+        return;
+      } else {
+        setSelectedBranch(branches.find(branch => branch.id === branchId));
+        setModalVisible(!isModalVisible);
+      }
+    // } catch (error) {
+    //   console.error("Failed to check if manager exists:", error);
+    // }
+  };
 
 
-const toggleModal = (branchId) => {
-  setSelectedBranch(branches.find(branch => branch.id === branchId));
-  setModalVisible(!isModalVisible);
-};   
+  const handleBranchFormSubmit = (newBranch) => {
+    setBranches(prevBranches => [...prevBranches, newBranch]);
+  };
+  
 
-const toggleBranchModal = () => {
-  setBranchVisible(!isBranchVisible);
-};   
+  const toggleBranchModal = () => {
+    setBranchVisible(!isBranchVisible);
+  };
 
-    return (
-        <AdminScreenLayout navigation={navigation}>
-            <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={toggleBranchModal}>
-                    <Icon name="plus-circle" size={38} color="#000" />
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.heading}>Branch List</Text>
-            
-            <FlatList
-        data={branches}
-        renderItem={({ item }) => (
-          <AddBranchCard
-            branchName={item.branchName}
-            locationName={item.location}
-            onPress={() => toggleModal(item.id)}
+  const toggleCloseModal =() => {
+    setModalVisible(!isModalVisible);
+  };
+
+  return (
+    <AdminScreenLayout navigation={navigation}>
+      <View style={styles.mainContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerHeading}>BRANCH LIST</Text>
+          <TouchableOpacity onPress={toggleBranchModal}>
+            <Icon name="plus-circle" size={33} color="#fff" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <FlatList
+            data={branches}
+            renderItem={({item}) => (
+              <AddBranchCard
+                name={item.name}
+                locationName={item.location}
+                onPress={() => toggleModal(item.id)}
+              />
+            )}
+            keyExtractor={item => item.id}
+            numColumns={2}
           />
-        )}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-      />
-      <AddEmployeeModal
-        isVisible={isModalVisible}
-        closeModal={toggleModal}
-        onSubmit={handleFormSubmit}
-        selectedBranch={selectedBranch}
-      />
+          {managerExists && <Text style={{ color: 'red' }}>Manager already exists for this branch!</Text>} 
+          <AddEmployeeModal
+            isVisible={isModalVisible}
+            closeModal={toggleModal}
+            cancleClose={toggleCloseModal}
+            onSubmit={handleFormSubmit}
+            selectedBranch={selectedBranch}
+          />
 
-<AddBranchForm
-                isVisible={isBranchVisible} 
-                onDismiss={toggleBranchModal}
-                onSubmit={handleBranchFormSubmit}
-            />
-
-        </AdminScreenLayout>
-    );
+          <AddBranchForm
+            isVisible={isBranchVisible}
+            onDismiss={toggleBranchModal}
+            onSubmit={handleBranchFormSubmit}
+          />
+        </View>
+      </View>
+    </AdminScreenLayout>
+  );
 };
 
 const styles = StyleSheet.create({
-    iconContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        padding: 10,
-    },
-    heading: {
-        fontSize: 24,
-        textAlign: 'center',
-        paddingVertical: 10,
-    }
+  mainContainer: {
+    backgroundColor: '#001F3F',
+  },
+  header: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  headerHeading: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingBottom: 3,
+  },
+  container: {
+    backgroundColor: 'rgb(238, 242, 251)',
+    height: '100%',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    paddingLeft: 3,
+    paddingTop:13,
+    justifyContent: 'center',
+    alignItems:'center'
+  },
 });
 
 export default AddBranch;

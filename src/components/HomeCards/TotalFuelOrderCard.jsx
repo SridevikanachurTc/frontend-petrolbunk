@@ -1,20 +1,41 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AdminStatsApi from '../../services/AdminStatsApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CARD_WIDTH = Dimensions.get('window').width / 2 - 20; 
 
 function TotalFuelOrderCard() {
-  const data = {
-    number: "120",
-  };
+  const [orderCount, setOrderCount] = useState(null);
+
+
+    const fetchOrderCount = useCallback(async () => {
+      try {
+        const data = await AdminStatsApi.getActiveOrdersCount();
+        setOrderCount(data); 
+      } catch (error) {
+        console.error("Error fetching active order count:", error);
+      }
+    }, []);  
+
+   
+    useFocusEffect(
+      useCallback(() => {
+        fetchOrderCount();
+        return () => {};  
+      }, [ fetchOrderCount])
+    );
+
+
+  if (orderCount === null) return null;
 
   return (
     <View style={styles.card}>
-        <View style={styles.iconContainer}>
-      <Icon name="label" size={36} color="#001F3F" />
+      <View style={styles.iconContainer}>
+        <Icon name="label" size={36} color="#001F3F" />
       </View>
-      <Text style={styles.numberText}>{data.number}</Text>
+      <Text style={styles.numberText}>{(orderCount === null) ? 'Loading...' : orderCount}</Text>
       <Text style={styles.salesText}>Fuel Orders</Text>
     </View>
   );

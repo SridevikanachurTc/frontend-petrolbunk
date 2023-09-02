@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const FuelOrderCard = ({ status, dateOfOrder }) => {
+const FuelOrderCard = ({ orders }) => {
     return (
         <View style={styles.card}>
-            <Text style={styles.text}>{status}</Text>
-            <Text style={styles.text}>{dateOfOrder}</Text>
+            <Text style={styles.text}>{orders.id}</Text>
+            <Text style={styles.text}>{orders.orderQuantity}Liters</Text>
+            <Text style={styles.text}>{orders.orderStatus}</Text>
+            {/* id, quantity, status */}
         </View>
     );
 }
@@ -18,16 +20,15 @@ const styles = StyleSheet.create({
     margin: 4,
     padding: 16,
     marginLeft: 1,
-    // borderBottomColor: 'gray',
-    // borderBottomWidth: 1,
     borderRadius: 8,
     backgroundColor: '#fff',
-    width: '99%',
+    width: 350,
     elevation: 4,
     },
     text:{
-        marginLeft: 30,
-        marginRight: 30
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#001F3F'
     }
 });
 

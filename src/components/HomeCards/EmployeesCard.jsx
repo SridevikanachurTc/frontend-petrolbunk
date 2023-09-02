@@ -1,22 +1,42 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Using FontAwesome icons
+import AdminStatsApi from '../../services/AdminStatsApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const CARD_WIDTH = Dimensions.get('window').width / 2 - 20; // Subtracting 20 for padding/margin
 
-function CustomersCard() {
-  const data = {
-    number: "120",
-  };
+function EmployeesCard() {
+  const [employeeCount, setEmployeeCount] = useState(null);
+
+
+    const fetchEmployeeCount = useCallback(async () => {
+      try {
+        const data = await AdminStatsApi.getEmployeeCount();
+        setEmployeeCount(data);
+      } catch (error) {
+        console.error("Error fetching employee count:", error);
+      }
+    }, []);  
+
+    
+    useFocusEffect(
+      useCallback(() => {
+        fetchEmployeeCount();
+        return () => {};  
+      }, [fetchEmployeeCount])
+    );
+
+  if (employeeCount === null) return null; 
 
   return (
     <View style={styles.card}>
-        <View style={styles.iconContainer}>
-      <Icon name="users" size={36} color="#001F3F" />
+      <View style={styles.iconContainer}>
+        <Icon name="users" size={36} color="#001F3F" />
       </View>
-      <Text style={styles.numberText}>{data.number}</Text>
-      <Text style={styles.salesText}>Avg Cust/day</Text>
+      <Text style={styles.numberText}>{(employeeCount === null) ? 'Loading...' : employeeCount}</Text>
+      <Text style={styles.salesText}>Total Employees</Text>
     </View>
   );
 }
@@ -59,4 +79,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CustomersCard;
+export default EmployeesCard;
