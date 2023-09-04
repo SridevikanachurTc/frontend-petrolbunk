@@ -234,7 +234,7 @@ const FuelOrder = ({navigation}) => {
               </TouchableOpacity>
             )}
             keyExtractor={item => item.id}
-            ListFooterComponent={<View style={{height: 130}} />}
+            ListFooterComponent={<View style={{height: 200}} />}
           />
           <FuelOrderFormModal
             isVisible={isModalVisible}

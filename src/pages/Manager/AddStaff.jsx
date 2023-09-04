@@ -26,19 +26,43 @@ const AddStaff = ({ navigation }) => {
       return emailRegex.test(email);
   };
 
+  const isValidAge = number => {
+    const phoneRegex = /^\d{2}$/;
+    return phoneRegex.test(number);
+  };
+
   const handlePhoneNumberChange = (text) => {
       if (text.length <= 10) { // Ensure that the entered phone number is not more than 10 digits
           handleInputChange('phoneNumber', text);
       }
   };
 
+  const areFieldsValid = () => {
+    const {name, phoneNumber, salary, email, age, address} = employeeDetails;
+
+    return name && phoneNumber && salary && email && age && address;
+};
+
+
 
     const handleSubmit = async () => {
       try {
+
+        if (!areFieldsValid()) {
+          alert('Please enter data for all fields.');
+          return;
+      }
+
         if (!isValidEmail(employeeDetails.email)) {
           alert('Please enter a valid email address.');
           return;
       }
+
+      if (!isValidAge(employeeDetails.age)) {
+        alert('Please enter a valid age.');
+        return;
+      }
+
         await UserApi.createStaff(employeeDetails); 
         alert('Staff created successfully');
         setEmployeeDetails({
@@ -109,7 +133,9 @@ const AddStaff = ({ navigation }) => {
                 <TextInput
                     placeholder="Age"
                     value={employeeDetails.age}
-                    onChangeText={(text) => handleInputChange('age', text)}
+                    onChangeText={text => {
+            if (text.length <= 2) handleInputChange('age', text);
+          }}
                     keyboardType="numeric"
                     style={styles.input}
                 />

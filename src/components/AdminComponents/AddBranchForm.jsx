@@ -21,6 +21,11 @@ const AddBranchForm = ({ isVisible, onDismiss, onSubmit }) => {
     };
 
     const handleFormSubmission = async () => {
+        if (!branchName || !location || !fuelCapacity || !fuelLevel) {
+            alert('Please enter data for all fields.');
+            return;
+        }
+    
         if (!isNumber(fuelCapacity) || !isNumber(fuelLevel)) {
             alert('Fuel capacity and fuel level should only be numbers.');
             return;
@@ -39,6 +44,7 @@ const AddBranchForm = ({ isVisible, onDismiss, onSubmit }) => {
             console.error("Error adding new branch:", error);
         }
     };
+    
     
 
     const handleSubmit = () => {

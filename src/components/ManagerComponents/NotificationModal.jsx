@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import UserApi from '../../services/UserApi';
 import FuelInventoryApi from '../../services/FuelInventoryApi';
 import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
 
 
 
@@ -50,17 +51,24 @@ const NotificationModal = ({ isVisible, onDismiss }) => {
         backdropTransitionOutTiming={500}
         style={styles.modal}
       >
-        <View style={styles.container}>
+     <View style={styles.container}>
           <Text style={styles.heading}>Fuel Fill Requests</Text>
+          <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.columnHeader}>Requested By</Text>
+            <Text style={styles.columnHeader}>Date</Text>
+          </View>
           <FlatList
             data={requests}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <Text style={styles.text}>
-                {item.requestBy.name} requests fuel refill for {item.requestBy.bunk.name}
-              </Text>
+              <View style={styles.tableRow}>
+                <Text style={styles.columnText}>{item.requestBy.name}</Text>
+                <Text style={styles.columnText}>{moment(item.requestedAt).format('DD/MM/YYYY')}</Text>
+              </View>
             )}
           />
+        </View>
         </View>
       </Modal>
     );
@@ -79,6 +87,12 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30, 
     },
+    table: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      overflow: 'hidden',
+    },
     heading: {
         color: '#001F3F',
         textAlign: 'center',
@@ -88,12 +102,36 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
       },
-      text: {
-        fontSize: 18,
-        padding: 10,
-        fontWeight: 'bold',
-        color:'#001F3F',
-      }
+      tableHeader: {
+        flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderBottomWidth: 1,
+    opacity: 0.7,
+    borderRadius: 5,
+    borderColor: '#ccc',
+    backgroundColor: '#808F9F',
+    paddingVertical: 8,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      borderBottomWidth: 1,
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      borderColor: '#ccc',
+      paddingVertical: 8,
+    },
+    columnHeader: {
+      flex: 1,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#001F3F',
+    },
+    columnText: {
+      flex: 1,
+      textAlign: 'center',
+      color: '#001F3F',
+    }
 });
 
 export default NotificationModal;

@@ -15,13 +15,13 @@ const EmployeeCards = ({employee, onPress}) => {
     require('C:/Users/rashi/Desktop/frontendPetrolBunk/petrolBunkFrontend/src/data/avatar10.jpg'),
     require('C:/Users/rashi/Desktop/frontendPetrolBunk/petrolBunkFrontend/src/data/avatar11.jpg'),
   ];
-
+// console.log(employee.profilePic);
   const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => onPress(employee)}>
       <View style={styles.avatarName}>
-        <Image source={randomAvatar} style={styles.avatarImage} />
+      <Image source={employee && employee.profilePic ? { uri: employee.profilePic } : randomAvatar} style={styles.avatarImage} />
         <Text style={styles.cardName}>{employee.name}</Text>
       </View>
       <View>

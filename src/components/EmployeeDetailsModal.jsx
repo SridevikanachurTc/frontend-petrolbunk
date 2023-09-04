@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
@@ -25,6 +26,38 @@ const EmployeeDetailsModal = ({ isVisible, employee, onClose, onShowAttendanceLo
   const formatTime = time => {
     return moment(time).format('HH:mm');
   };
+
+  const handleDelete = () => {
+    if (employee && employee.id) {
+        Alert.alert(
+            'Confirmation',
+            'Do you surely want to remove this staff?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Delete operation cancelled.'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        UserApi.deleteUser(employee.id)
+                            .then(() => {
+                                alert('User deleted successfully');
+                                onClose(); // Close the modal after successful deletion
+                            })
+                            .catch(error => {
+                                console.error('Failed to delete user:', error);
+                                alert('Failed to delete user.');
+                            });
+                    },
+                },
+            ],
+            { cancelable: true },
+        );
+    }
+};
+
 
   const onChangeStart = (event, selectedTime) => {
     setShowStartPicker(false);
@@ -101,6 +134,12 @@ const EmployeeDetailsModal = ({ isVisible, employee, onClose, onShowAttendanceLo
           <Icon style={styles.icon} name="user" size={26} color="#001F3F" />
           <Text style={styles.text}>{employee.name}</Text>
         </View>
+        {['BRANCH_MANAGER', 'STAFF'].includes(employee.role) && (
+      <View style={styles.row}>
+        <Icon style={styles.icon} name="building" size={24} color="#001F3F" />
+        <Text style={styles.text}>{employee.bunk.name}</Text>
+      </View>
+    )}
         <View style={styles.row}>
           <Icon
             style={styles.icon}
@@ -166,7 +205,10 @@ const EmployeeDetailsModal = ({ isVisible, employee, onClose, onShowAttendanceLo
                       size={27}
                       color="#001F3F"
                     />
-                    <Text style={styles.text}>{toCamelCase(workTime)}</Text>
+                    {employee.shift && employee.shift.workTime && 
+    <Text style={styles.text}>{toCamelCase(employee.shift.workTime)}</Text>
+}
+
                   </View>
                 </React.Fragment>
               )}
@@ -190,6 +232,16 @@ const EmployeeDetailsModal = ({ isVisible, employee, onClose, onShowAttendanceLo
                 />
                 <Text style={styles.text}>Attendance Log</Text>
               </TouchableOpacity>
+              <View style={styles.deleteIcon}>
+              <TouchableOpacity onPress={handleDelete}>
+                <Icon
+                  
+                  name="trash"
+                  size={30}
+                  color="#001F3F"
+                />
+              </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -242,6 +294,11 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: '500',
     color: '#001F3F',
+  },
+  deleteIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
 });
 

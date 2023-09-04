@@ -29,7 +29,7 @@ const Profile = ({ employee }) => {
         quality: 0.5,
       },
     };
-    ImagePicker.launchImageLibrary(options, response => {
+    launchImageLibrary(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
         alert('User cancelled image picker');
@@ -50,7 +50,7 @@ const Profile = ({ employee }) => {
 
         let photo = {...assets[0]};
         let formdata = new FormData();
-        formdata.append('files', {
+        formdata.append('file', {
           uri: photo.uri,
           name: photo?.fileName ? photo?.fileName : 'image.jpg',
           type: photo.type,
@@ -60,8 +60,8 @@ const Profile = ({ employee }) => {
     });
   }
   function uploadImage(formdata) {
-    coreService
-      .uploadImage(formdata,false)
+    
+    UserApi.uploadProfileImage(formdata,employee.id)
       .then(res => {
         alert('Image uploaded successfully', JSON.stringify(res));
       })
@@ -76,58 +76,6 @@ const Profile = ({ employee }) => {
         ]);
       });
   }
-
-//   const handleImageUpload = async (imageData) => {
-//     try {
-//         // console.log("Uploading:", uri);
-//         console.log(employee.id);
-//         const response = await UserApi.uploadProfileImage(employee.id, imageData);
-//         console.log('uploaded success',response);
-//         alert('Image uploaded successfully');
-//     } catch (error) {
-//         console.error("Upload Error:", error);
-//         alert('Failed to upload image.');
-//     }
-// };
-
-// const handleImageSelection = (response) => {
-//   if (response.didCancel) {
-//       console.log('User cancelled image picker');
-//   } else if (response.error) {
-//       console.log('ImagePicker Error: ', response.error);
-//   } else {
-//     const {assets} = response;
-//     setChosenImage({
-//       fileData: assets[0],
-//       fileUri: assets[0]?.uri,
-//     });
-
-//     let photo = {...assets[0]};
-//     let formdata = new FormData();
-//     formdata.append('file', {
-//       uri: photo.uri,
-//       name: photo?.fileName ? photo?.fileName : 'image.jpg',
-//       type: photo.type,
-//     });
-//     handleImageUpload(formdata);
-//   }
-// };
-
-
-  
-
-//   const chooseImage = () => {
-//     let options = {
-//       storageOptions: {
-//         skipBackup: true,
-//         path: 'images',
-//         quality: 0.5,
-//       },
-//     };
-
-//     launchImageLibrary(options, handleImageSelection);
-//   };
-
 
 
   const avatars = [
@@ -185,12 +133,13 @@ const Profile = ({ employee }) => {
   return (
     <View>
       <Image
-        source={require('C:/Users/rashi/Desktop/frontendPetrolBunk/petrolBunkFrontend/src/data/petrolbunk.jpg')}
+        source={require('C:/Users/rashi/Desktop/frontendPetrolBunk/petrolBunkFrontend/src/data/petrol_edited.jpg')}
         style={styles.image}
       />
       <View style={styles.avatar}>
       <TouchableOpacity onPress={chooseImage} style={{ alignItems: 'center' }}>
-      <Image source={chosenImage ? { fileUri : chosenImage } : randomAvatar} style={styles.avatarImage} />
+      <Image source={employee && employee.profilePic ? { uri: employee.profilePic } : randomAvatar} style={styles.avatarImage} />
+
       <Icon style={styles.editIcon} name="pencil" size={24} color="#001F3F" />
         </TouchableOpacity>
 
@@ -205,6 +154,12 @@ const Profile = ({ employee }) => {
             <Icon style={styles.icon} name="child" size={26} color="#001F3F" />
             <Text style={styles.text}>{employee.age}</Text>
           </View>
+          {['BRANCH_MANAGER', 'STAFF'].includes(employee.role) && (
+      <View style={styles.row}>
+        <Icon style={styles.icon} name="building" size={24} color="#001F3F" />
+        <Text style={styles.text}>{employee.bunk.name}</Text>
+      </View>
+    )}
           <View style={styles.row}>
             <Icon
               style={styles.icon}
@@ -212,6 +167,7 @@ const Profile = ({ employee }) => {
               size={22}
               color="#001F3F"
             />
+            
             <Text style={styles.text}>{toCamelCase(employee.role)}</Text>
           </View>
           <View style={styles.row}>
@@ -310,7 +266,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '60%',
-    opacity: 0.5,
+    opacity: 0.7,
   },
   avatarImage: {
     width: 120,

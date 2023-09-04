@@ -17,6 +17,8 @@ const EmployeeList = ({ navigation }) => {
   const [isAttendanceModalVisible, setAttendanceModalVisible] = useState(false); // State for Attendance Log Modal
   const isFocused = useIsFocused();
 
+  // console.log("employee sent to cards", filteredEmployees);
+
   useEffect(() => {
     const fetchAllUsers = async () => {
       const allUsers = await UserApi.getAllUsers();

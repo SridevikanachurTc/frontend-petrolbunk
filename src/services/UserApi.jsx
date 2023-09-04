@@ -1,4 +1,5 @@
 import instance from '../configurations/apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const fetchUserDetails = async () => {
   try {
@@ -47,13 +48,41 @@ const assignShift = async (staffId, shiftDetails) => {
 };
 
 
-const uploadProfileImage = async (userId, imageUri) => {
+const uploadProfileImage = async (imageUri, userId) => {
   
   try {
-      console.log(`Uploading image from: ${imageUri}`);
-      const response = await instance.post(`/users/profile?userId=${userId}`, imageUri);
-      console.log('Successfully uploaded profile image:', response.data);
-      return response.data;
+    const token = await AsyncStorage.getItem('token');
+      // Define the API endpoint URL
+const apiUrl = `https://07c6-103-93-20-138.ngrok-free.app/users/profile?userId=${userId}`;
+
+// Create the Fetch request
+fetch(apiUrl, {
+  method: 'POST',
+  headers: {
+    ...token ? { 'Authorization': `Bearer ${token}` } : console.log("token not recieved"),
+  },
+  body: imageUri,
+})
+  .then(response => {
+    // Check if the response status is OK (200)
+  console.log("file upload response--------->")
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  // Check if the response contains JSON before trying to parse it
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.indexOf("application/json") !== -1) {
+    return response.json();
+  } else {
+    return response.text();  // Return plain text if the response is not JSON
+  }
+})
+.then(data => {
+  console.log('Response data:', data);
+})
+.catch(error => {
+  console.error('Fetch error:', error);
+});
   } catch (error) {
       console.error('Error uploading profile image:', error);
       if (error.response) {
@@ -70,6 +99,15 @@ const uploadProfileImage = async (userId, imageUri) => {
   }
 };
 
+const deleteUser = async (userId) => {
+  try {
+    const response = await instance.delete(`/users/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 const UserApi = {
@@ -78,7 +116,8 @@ const UserApi = {
   deleteManager,
   createStaff,
   assignShift,
-  uploadProfileImage
+  uploadProfileImage,
+  deleteUser
 };
 
 export default UserApi;

@@ -50,6 +50,12 @@ import FuelInventoryApi from '../../services/FuelInventoryApi';
       return;
     }
 
+    if (!quantity.trim()) {
+      alert('Please enter order quantity.');
+      return;
+  }
+  
+
     try {
       const bunkId = await AsyncStorage.getItem('bunkId');
 

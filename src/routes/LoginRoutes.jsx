@@ -20,35 +20,6 @@ function LoginRoutes() {
     fetchUserRole();
   }, []);
 
-  const renderRoutesBasedOnRole = () => {
-    if (userRole === 'ADMIN') {
-      return (
-        <Stack.Screen
-          name="AdminRoutes"
-          component={AdminRoutes}
-          options={{headerShown: false}}
-        />
-      );
-    } else if (userRole === 'BRANCH_MANAGER') {
-      return (
-        <Stack.Screen
-          name="ManagerRoutes"
-          component={ManagerRoutes}
-          options={{headerShown: false}}
-        />
-      );
-    } else if (userRole === 'STAFF') {
-      return (
-        <Stack.Screen
-          name="StaffRoutes"
-          component={StaffRoutes}
-          options={{headerShown: false}}
-        />
-      );
-    } else {
-      return null; // Default case can return null or some other fallback component.
-    }
-  };
 
   return (
     <Stack.Navigator initialRouteName="Login">
@@ -57,7 +28,21 @@ function LoginRoutes() {
         component={Login}
         options={{headerShown: false}}
       />
-      {renderRoutesBasedOnRole()}
+      <Stack.Screen
+          name="AdminRoutes"
+          component={AdminRoutes}
+          options={{headerShown: false}}
+        />
+      <Stack.Screen
+          name="ManagerRoutes"
+          component={ManagerRoutes}
+          options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="StaffRoutes"
+          component={StaffRoutes}
+          options={{headerShown: false}}
+        />
     </Stack.Navigator>
   );
 }

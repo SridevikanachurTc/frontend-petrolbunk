@@ -139,6 +139,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const {token, user} = await loginApi.login(username, password);
+      console.log("token in login", token);
 
       // Storing the user data and token in AsyncStorage
       await AsyncStorage.setItem('userData', JSON.stringify(user));
@@ -155,6 +156,7 @@ const Login = () => {
         setPassword('');
 
     //  navigation.navigate('LoginRoutes');
+
      
       if (user.role === 'ADMIN') {
         navigation.navigate('AdminRoutes', { screen: 'AdminHome' });
@@ -169,9 +171,9 @@ const Login = () => {
     
     } catch (error) {
       console.log(error);
-      Alert.alert('Error', error.message || 'Something went wrong');
+      Alert.alert('Error','Invalid credentials');
     }
-  };
+  }; 
 
   return (
     <ImageBackground
@@ -224,7 +226,8 @@ const styles = StyleSheet.create({
     height: 250,
     position: 'absolute',
     top: 60,
-    opacity: 0.5,
+    left: 25,
+    opacity: 0.75,
     borderRadius : 20
   },
   logo: {
@@ -234,7 +237,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     top: 38,
-    left: 120
+    left: 150
     // left: '20%'
   },
   loginContainer: {

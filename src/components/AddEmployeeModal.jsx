@@ -32,22 +32,29 @@ const AddEmployeeModal = ({
   };
 
   const handleSubmit = () => {
-    if (!isValidEmail(employeeDetails.email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
-    if (!isValidPhoneNumber(employeeDetails.phoneNumber)) {
-      alert('Please enter a valid 10-digit phone number.');
-      return;
+    const {name, salary, email, age, address, phoneNumber} = employeeDetails;
+
+    if (!name || !salary || !email || !age || !address || !phoneNumber) {
+        alert('Please enter data for all fields.');
+        return;
     }
 
-    if (!isValidAge(employeeDetails.age)) {
-      alert('Please enter a valid age.');
-      return;
+    if (!isValidEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+    if (!isValidPhoneNumber(phoneNumber)) {
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+    }
+
+    if (!isValidAge(age)) {
+        alert('Please enter a valid age.');
+        return;
     }
 
     if (selectedBranch) {
-      onSubmit(employeeDetails, selectedBranch.id);
+        onSubmit(employeeDetails, selectedBranch.id);
     }
     setEmployeeDetails({
       name: '',
@@ -58,7 +65,8 @@ const AddEmployeeModal = ({
       phoneNumber: '',
     });
     closeModal();
-  };
+};
+
 
   const handleCancel = () => {
     setEmployeeDetails({
